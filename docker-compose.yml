@@ -1,0 +1,19 @@
+# Local development database only. No authentication is configured, so never
+# expose this port beyond localhost or use this file in production.
+services:
+  mongo:
+    image: mongo:7
+    container_name: sms-mongo
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - sms-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  sms-mongo-data:

@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens. Palette:
+ *   Ink      deep blue-green used for text and the sidebar
+ *   Paper    cool off-white page background
+ *   Tideline teal (primary) for actions and focus
+ *   Marigold (accent) reserved for "you are here" markers, like the margin rule of an exercise book
+ * Semantic colours (success, warning, info, destructive) are separate from the brand colours.
+ */
+@layer base {
+  :root {
+    --background: 160 12% 97%;
+    --foreground: 195 45% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 195 45% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 195 45% 13%;
+    --primary: 192 80% 22%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 190 28% 93%;
+    --secondary-foreground: 195 45% 16%;
+    --muted: 190 20% 94%;
+    --muted-foreground: 197 18% 36%;
+    --accent: 41 92% 54%;
+    --accent-foreground: 30 60% 12%;
+    --destructive: 4 72% 44%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 58% 26%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 95% 46%;
+    --warning-foreground: 28 80% 22%;
+    --info: 205 80% 38%;
+    --info-foreground: 0 0% 100%;
+    --border: 192 16% 87%;
+    --input: 192 16% 80%;
+    --ring: 192 80% 30%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 196 48% 11%;
+    --sidebar-foreground: 190 20% 90%;
+    --sidebar-accent: 195 38% 19%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 195 30% 20%;
+  }
+
+  .dark {
+    --background: 197 40% 8%;
+    --foreground: 190 20% 92%;
+    --card: 197 36% 11%;
+    --card-foreground: 190 20% 92%;
+    --popover: 197 36% 11%;
+    --popover-foreground: 190 20% 92%;
+    --primary: 190 72% 46%;
+    --primary-foreground: 197 50% 7%;
+    --secondary: 197 28% 17%;
+    --secondary-foreground: 190 20% 92%;
+    --muted: 197 26% 15%;
+    --muted-foreground: 192 14% 68%;
+    --accent: 41 92% 56%;
+    --accent-foreground: 30 60% 10%;
+    --destructive: 4 70% 58%;
+    --destructive-foreground: 197 50% 7%;
+    --success: 152 50% 52%;
+    --success-foreground: 197 50% 7%;
+    --warning: 38 92% 56%;
+    --warning-foreground: 40 90% 76%;
+    --info: 205 80% 64%;
+    --info-foreground: 197 50% 7%;
+    --border: 197 24% 20%;
+    --input: 197 24% 26%;
+    --ring: 190 72% 52%;
+
+    --sidebar-background: 197 45% 6%;
+    --sidebar-foreground: 190 20% 88%;
+    --sidebar-accent: 197 34% 14%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 197 28% 15%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply min-h-dvh bg-background font-sans text-foreground antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Exercise-book ruling with a margin line: the one memorable visual in the product. */
+  .ruled-paper {
+    background-image:
+      linear-gradient(
+        to right,
+        transparent 0.75rem,
+        hsl(var(--accent) / 0.85) 0.75rem,
+        hsl(var(--accent) / 0.85) calc(0.75rem + 2px),
+        transparent calc(0.75rem + 2px)
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 35px,
+        hsl(var(--primary) / 0.13) 35px,
+        hsl(var(--primary) / 0.13) 36px
+      );
+  }
+}
