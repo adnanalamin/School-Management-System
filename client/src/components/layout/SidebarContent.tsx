@@ -1,65 +1,54 @@
-import { NavLink } from 'react-router-dom';
-import { Logo } from '@/components/common/Logo';
+import { Link } from 'react-router-dom';
+import { Logo, LogoMark } from '@/components/common/Logo';
 import { StatusDot, stateLabel } from '@/features/system/StatusIndicator';
 import { useSystemStatus } from '@/features/system/useSystemStatus';
+import { env } from '@/lib/env';
 import { cn } from '@/lib/utils';
 import { getNavGroups } from './navigation';
+import { SidebarNavItem } from './SidebarNavItem';
 
 interface SidebarContentProps {
+  /** Icon-only layout (desktop only). */
+  collapsed?: boolean;
   /** Called after a link is chosen, so the mobile drawer can close itself. */
   onNavigate?: () => void;
 }
 
-export function SidebarContent({ onNavigate }: SidebarContentProps) {
+export function SidebarContent({ collapsed = false, onNavigate }: SidebarContentProps) {
   const groups = getNavGroups();
   const { state, data } = useSystemStatus();
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
-      <div className="flex h-14 shrink-0 items-center border-b border-sidebar-border px-5">
-        <Logo />
+      <div className={cn('flex h-16 shrink-0 items-center border-b border-sidebar-border', collapsed ? 'justify-center' : 'px-5')}>
+        <Link to="/app" aria-label={`${env.VITE_APP_NAME} dashboard`} className="rounded-md">
+          {collapsed ? <LogoMark /> : <Logo />}
+        </Link>
       </div>
 
-      <nav aria-label="Main" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+      <nav aria-label="Main" className="flex-1 overflow-y-auto px-3 py-4">
         {groups.map((group, index) => (
-          <div key={group.label ?? index} className="space-y-1">
+          <div key={group.label ?? 'primary'} className={cn('space-y-1', index > 0 && 'mt-5')}>
             {group.label ? (
-              <p className="px-3 pb-1 text-xs font-medium text-sidebar-foreground/60">{group.label}</p>
+              collapsed ? (
+                <div aria-hidden="true" className="mx-3 mb-2 h-px bg-sidebar-border" />
+              ) : (
+                <p className="px-3 pb-1 text-xs font-medium text-sidebar-foreground/60">{group.label}</p>
+              )
             ) : null}
-            {group.items.map(({ label, to, icon: Icon, end }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                onClick={onNavigate}
-                className={({ isActive }) =>
-                  cn(
-                    'relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                      : 'text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
-                  )
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {isActive ? <span aria-hidden="true" className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-accent" /> : null}
-                    <Icon className="size-4 shrink-0" aria-hidden="true" />
-                    {label}
-                  </>
-                )}
-              </NavLink>
+            {group.items.map((item) => (
+              <SidebarNavItem key={item.to} item={item} collapsed={collapsed} onNavigate={onNavigate} />
             ))}
           </div>
         ))}
       </nav>
 
-      <div className="shrink-0 space-y-1 border-t border-sidebar-border px-5 py-4 text-xs text-sidebar-foreground/70">
-        <p className="flex items-center gap-2">
+      <div className={cn('shrink-0 space-y-1 border-t border-sidebar-border py-4 text-xs text-sidebar-foreground/70', collapsed ? 'flex justify-center px-0' : 'px-5')}>
+        <p className="flex items-center gap-2" title={stateLabel(state)}>
           <StatusDot state={state} />
-          {stateLabel(state)}
+          <span className={cn(collapsed && 'sr-only')}>{stateLabel(state)}</span>
         </p>
-        {data ? <p>Server v{data.version}</p> : null}
+        {data && !collapsed ? <p>Server v{data.version}</p> : null}
       </div>
     </div>
   );

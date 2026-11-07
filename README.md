@@ -41,5 +41,4 @@ Production start: `npm run build && npm run start -w server`, serving `client/di
 - Validate on the server with Zod (`validate()` middleware); client validation is a convenience only.
 - Feature code goes in `server/src/modules/<feature>` and `client/src/features/<feature>`; shared UI in `client/src/components`.
 
-See `docs/PHASE-01.md` for the full file inventory, endpoints and security notes.
-"# School-Management-System" 
+Per-phase notes: `docs/PHASE-01.md` (foundation) and `docs/PHASE-02.md` (UI/UX system). In development, `/app/design-system` is the living style guide.
