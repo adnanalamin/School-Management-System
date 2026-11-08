@@ -3,15 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "description": "Production-ready School Management System (React + Express + MongoDB)",
-  "workspaces": ["client", "server"],
-  "engines": { "node": ">=20.11.0" },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "scripts": {
     "dev": "concurrently -k -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w server && npm run build -w client",
     "typecheck": "npm run typecheck -w server && npm run typecheck -w client",
     "test": "npm run test -w server",
     "db:up": "docker compose up -d mongo",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "db:indexes": "npm run db:indexes -w server",
+    "db:indexes:apply": "npm run db:indexes:apply -w server",
+    "db:seed": "npm run db:seed -w server"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

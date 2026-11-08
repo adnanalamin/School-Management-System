@@ -1,19 +1,30 @@
 # Local development database only. No authentication is configured, so never
 # expose this port beyond localhost or use this file in production.
+#
+# Runs MongoDB as a single-node replica set. Multi-document transactions (recording a payment, issuing a book)
+# only work on a replica set, and MongoDB Atlas is always one, so development should match.
 services:
   mongo:
     image: mongo:7
     container_name: sms-mongo
     restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
       - sms-mongo-data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      # Initialises the replica set the first time, then reports healthy once it has a primary.
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }).ok }"
+      interval: 5s
+      timeout: 10s
+      retries: 12
+      start_period: 10s
 
 volumes:
   sms-mongo-data:

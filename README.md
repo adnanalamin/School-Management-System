@@ -17,6 +17,7 @@ npm install                                  # installs both workspaces
 cp server/.env.example server/.env           # then review the values
 cp client/.env.example client/.env.local
 npm run db:up                                # local MongoDB via Docker (127.0.0.1:27017)
+npm run db:seed                              # permissions, roles, default settings (optional for now)
 npm run dev                                  # API on :5000, client on :5173
 ```
 
@@ -30,7 +31,9 @@ Open http://localhost:5173. The status card shows live API and database health.
 | `npm run build` | Compiles the server to `server/dist` and builds the client to `client/dist` |
 | `npm run typecheck` | Strict TypeScript check of both workspaces |
 | `npm test` | Server tests (Vitest + Supertest, no database needed) |
-| `npm run db:up` / `db:down` | Start / stop the local MongoDB container |
+| `npm run db:up` / `db:down` | Start / stop the local MongoDB container (single-node replica set) |
+| `npm run db:seed` | Idempotent baseline data: permissions, system roles, default settings |
+| `npm run db:indexes` / `db:indexes:apply` | Show / apply index changes (production builds indexes only when you run this) |
 
 Production start: `npm run build && npm run start -w server`, serving `client/dist` from a static host or reverse proxy that also forwards `/api` to the server.
 
@@ -41,4 +44,4 @@ Production start: `npm run build && npm run start -w server`, serving `client/di
 - Validate on the server with Zod (`validate()` middleware); client validation is a convenience only.
 - Feature code goes in `server/src/modules/<feature>` and `client/src/features/<feature>`; shared UI in `client/src/components`.
 
-Per-phase notes: `docs/PHASE-01.md` (foundation) and `docs/PHASE-02.md` (UI/UX system). In development, `/app/design-system` is the living style guide.
+Per-phase notes: `docs/PHASE-01.md` (foundation), `docs/PHASE-02.md` (UI/UX system), `docs/PHASE-03.md` (database). The data model, relationships and indexing strategy are in `docs/DATABASE.md`. In development, `/app/design-system` is the living style guide.

@@ -3,6 +3,7 @@ import { createApp } from './app';
 import { connectDatabase, disconnectDatabase } from './config/database';
 import { env } from './config/env';
 import { logger } from './config/logger';
+import './models'; // registers every Mongoose model; populate() and reference checks resolve them by name
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 let isShuttingDown = false;
